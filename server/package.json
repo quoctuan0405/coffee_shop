@@ -1,0 +1,48 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "tsc",
+    "heroku-postbuild": "tsc",
+    "dev:build": "tsc -w",
+    "dev:run": "nodemon build/index.js",
+    "dev": "env-cmd -f ./config/dev.env concurrently npm:dev:*",
+    "generate:get-schema": "graphql get-schema -p prisma --dotenv config/dev.env",
+    "generate:get-prisma-definition": "graphql codegen --dotenv config/dev.env",
+    "generate:get-resolvers-definition": "graphql-codegen --config codegen.yml",
+    "generate": "concurrently npm:generate:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.12.2",
+    "@graphql-codegen/typescript": "^1.12.2",
+    "@graphql-codegen/typescript-resolvers": "^1.12.2",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.3.8",
+    "@types/mongoose": "^5.7.14",
+    "@types/ws": "^7.2.2",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/lodash": "^4.14.149",
+    "concurrently": "^5.1.0",
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
+    "graphql": "^14.6.0",
+    "graphql-cli": "^3.0.14",
+    "graphql-middleware": "^4.0.2",
+    "graphql-yoga": "^1.18.3",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.11",
+    "prisma-binding": "^2.3.16",
+    "typescript": "^3.8.3"
+  }
+}

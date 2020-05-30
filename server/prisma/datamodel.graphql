@@ -1,0 +1,66 @@
+type User {
+  id: ID! @id
+  username: String! @unique
+  password: String!
+  role: UserRole!
+}
+
+enum UserRole {
+  MANAGER
+  EMPLOYEE
+}
+
+type Ingredient {
+  id: ID! @id
+  name: String! @unique
+  unit: String!
+}
+
+type Product {
+  id: ID! @id
+  name: String! @unique
+  unit: String!
+  price: Int!
+  ingredients: [IngredientAmount!]!
+}
+
+type IngredientAmount @embedded {
+  id: ID! @id
+  ingredient: Ingredient! @relation(name: "IngredientToProduct", link: INLINE, onDelete: SET_NULL)
+  amount: Int!
+}
+
+type Order {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  table: Int!
+  products: [ProductAmount!]! 
+  checkout: Boolean! @default(value: false)
+  total: Int
+  user: User! @relation(name: "OrderToUser", link: INLINE, onDelete: SET_NULL)
+}
+
+type ProductAmount @embedded {
+  id: ID! @id
+  product: Product! @relation(name: "ProductToOrder", link: INLINE, onDelete: SET_NULL)
+  amount: Int!
+}
+
+type Import {
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  ingredient: Ingredient! @relation(name: "IngredientToImport", link: INLINE, onDelete: SET_NULL)
+  inStock: Int!
+  total: Int!
+  amount: Int!
+}
+
+type Expense {
+  id: ID! @id
+  begin: DateTime!
+  end: DateTime!
+  name: String!
+  total: Int!
+}

@@ -1,0 +1,429 @@
+# source: http://localhost:4000
+# timestamp: Fri May 29 2020 20:28:58 GMT+0700 (Indochina Time)
+
+input CreateExpenseInput {
+  begin: DateTime!
+  end: DateTime!
+  name: String!
+  total: Int!
+}
+
+input CreateImportInput {
+  total: Int!
+  amount: Int!
+  ingredient: ID!
+}
+
+input CreateIngredientInput {
+  name: String!
+  unit: String!
+}
+
+input CreateOrderInput {
+  table: Int!
+  products: [ProductAmountInput!]!
+}
+
+input CreateProductInput {
+  name: String!
+  unit: String!
+  price: Int!
+  ingredients: [IngredientAmountInput!]!
+}
+
+input CreateUserInput {
+  username: String!
+  role: UserRole!
+}
+
+scalar DateTime
+
+type DayExpense {
+  day: String!
+  total: Int!
+}
+
+type DayRevenue {
+  day: String!
+  total: Int!
+}
+
+type Expense implements Node {
+  id: ID!
+  begin: DateTime!
+  end: DateTime!
+  name: String!
+  total: Int!
+}
+
+enum ExpenseOrderByInput {
+  id_ASC
+  id_DESC
+  begin_ASC
+  begin_DESC
+  end_ASC
+  end_DESC
+  name_ASC
+  name_DESC
+  total_ASC
+  total_DESC
+}
+
+type ExpensePreviousValues {
+  id: ID!
+  begin: DateTime!
+  end: DateTime!
+  name: String!
+  total: Int!
+}
+
+input ExpensesQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: ExpenseOrderByInput
+}
+
+type ExpenseSubscriptionPayload {
+  mutation: MutationType!
+  node: Expense
+  previousValues: ExpensePreviousValues
+}
+
+type Import implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  ingredient: Ingredient!
+  inStock: Int!
+  total: Int!
+  amount: Int!
+}
+
+enum ImportOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  inStock_ASC
+  inStock_DESC
+  total_ASC
+  total_DESC
+  amount_ASC
+  amount_DESC
+}
+
+type ImportPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  inStock: Int!
+  total: Int!
+  amount: Int!
+}
+
+input ImportsQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: ImportOrderByInput
+}
+
+type ImportSubscriptionPayload {
+  mutation: MutationType!
+  node: Import
+  previousValues: ImportPreviousValues
+}
+
+type Ingredient implements Node {
+  id: ID!
+  name: String!
+  unit: String!
+}
+
+type IngredientAmount implements Node {
+  id: ID!
+  ingredient: Ingredient!
+  amount: Int!
+}
+
+input IngredientAmountInput {
+  ingredient: ID!
+  amount: Int!
+}
+
+type IngredientInStock {
+  ingredient: Ingredient!
+  amount: Int!
+}
+
+enum IngredientOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  unit_ASC
+  unit_DESC
+}
+
+type IngredientPreviousValues {
+  id: ID!
+  name: String!
+  unit: String!
+}
+
+input IngredientsQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: IngredientOrderByInput
+}
+
+type IngredientSubscriptionPayload {
+  mutation: MutationType!
+  node: Ingredient
+  previousValues: IngredientPreviousValues
+}
+
+type MonthExpense {
+  month: String!
+  total: Int!
+}
+
+type MonthRevenue {
+  month: String!
+  total: Int!
+}
+
+type Mutation {
+  login(username: String!, password: String!): User!
+  usernameTaken(username: String!): Boolean!
+  passwordValidation(password: String!): Boolean!
+  changePassword(oldPassword: String!, newPassword: String!): Boolean!
+  logout: Boolean!
+  createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
+  deleteUser(id: ID!): User!
+  createIngredient(data: CreateIngredientInput!): Ingredient!
+  updateIngredient(id: ID!, data: UpdateIngredientInput!): Ingredient!
+  deleteIngredient(id: ID!): Ingredient!
+  createProduct(data: CreateProductInput!): Product!
+  updateProduct(id: ID!, data: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Product!
+  createOrder(data: CreateOrderInput!): Order!
+  updateOrder(id: ID!, data: UpdateOrderInput!): Order!
+  deleteOrder(id: ID!): Order!
+  createImport(data: CreateImportInput!): Import!
+  updateImport(id: ID!, data: UpdateImportInput!): Import!
+  deleteImport(id: ID!): Import!
+  createExpense(data: CreateExpenseInput!): Expense!
+  updateExpense(id: ID!, data: UpdateExpenseInput!): Expense!
+  deleteExpense(id: ID!): Expense!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+"""An object with an ID"""
+interface Node {
+  """The id of the object."""
+  id: ID!
+}
+
+type Order {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  table: Int!
+  products: [ProductAmount!]!
+  checkout: Boolean!
+  total: Int
+  user: User!
+}
+
+enum OrderOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  table_ASC
+  table_DESC
+  checkout_ASC
+  checkout_DESC
+  total_ASC
+  total_DESC
+}
+
+type OrderPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  table: Int!
+  checkout: Boolean!
+  total: Int
+}
+
+input OrdersQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: OrderOrderByInput
+}
+
+type OrderSubscriptionPayload {
+  mutation: MutationType!
+  node: Order
+  previousValues: OrderPreviousValues
+}
+
+type Product {
+  id: ID!
+  price: Int!
+  name: String!
+  unit: String!
+  ingredients: [IngredientAmount!]!
+}
+
+type ProductAmount implements Node {
+  id: ID!
+  product: Product!
+  amount: Int!
+}
+
+input ProductAmountInput {
+  product: ID!
+  amount: Int!
+}
+
+enum ProductOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  unit_ASC
+  unit_DESC
+  price_ASC
+  price_DESC
+}
+
+input ProductsQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: ProductOrderByInput
+}
+
+type ProductSubscriptionPayload {
+  mutation: MutationType!
+  node: Product
+  previousValues: IngredientPreviousValues
+}
+
+type Query {
+  me: User
+  users(query: UsersQueryInput): [User!]
+  ingredients(query: IngredientsQueryInput): [Ingredient!]
+  products(query: ProductsQueryInput): [Product!]
+  orders(query: OrdersQueryInput): [Order!]
+  imports(query: ImportsQueryInput): [Import!]
+  expenses(query: ExpensesQueryInput): [Expense!]
+  store: [IngredientInStock!]
+  dailyRevenue: [DayRevenue!]
+  monthlyRevenue: [MonthRevenue!]
+  yearlyRevenue: [YearRevenue!]
+  dailyExpense: [DayExpense!]
+  monthlyExpense: [MonthExpense!]
+  yearlyExpense: [YearExpense!]
+}
+
+type Subscription {
+  ingredients: IngredientSubscriptionPayload
+  products: ProductSubscriptionPayload
+  orders: OrderSubscriptionPayload
+  imports: ImportSubscriptionPayload
+  expenses: ExpenseSubscriptionPayload
+}
+
+input UpdateExpenseInput {
+  begin: DateTime
+  end: DateTime
+  name: String
+  total: Int
+}
+
+input UpdateImportInput {
+  total: Int
+  amount: Int
+  inStock: Int
+  ingredient: ID
+}
+
+input UpdateIngredientInput {
+  name: String
+  unit: String
+}
+
+input UpdateOrderInput {
+  checkout: Boolean!
+  table: Int
+  products: [ProductAmountInput!]!
+}
+
+input UpdateProductInput {
+  name: String
+  unit: String
+  price: Int
+  ingredients: [IngredientAmountInput!]!
+}
+
+input UpdateUserInput {
+  id: ID!
+  username: String
+  role: UserRole
+}
+
+type User {
+  id: ID!
+  username: String!
+  role: UserRole!
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  username_ASC
+  username_DESC
+  password_ASC
+  password_DESC
+  role_ASC
+  role_DESC
+}
+
+enum UserRole {
+  MANAGER
+  EMPLOYEE
+}
+
+input UsersQueryInput {
+  skip: Int
+  first: Int
+  after: String
+  orderBy: UserOrderByInput
+}
+
+type YearExpense {
+  year: String!
+  total: Int!
+}
+
+type YearRevenue {
+  year: String!
+  total: Int!
+}

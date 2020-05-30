@@ -1,0 +1,8 @@
+mutation {
+    createUser(data: {
+        username: "username"
+        role: MANAGER
+    }) {
+        id
+    }
+}

@@ -1,0 +1,15 @@
+overwrite: true
+documents: null
+generates:
+  src/generated/ResolversType.ts:
+    schema: "./src/schema.graphql"
+    config:
+      defaultMapper: any
+      contextType: ../resolvers/types/Context#Context
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+  src/generated/PrismaType.ts:
+    schema: "./src/generated/prisma.graphql"
+    plugins:
+      - "typescript"

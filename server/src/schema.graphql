@@ -1,0 +1,267 @@
+# import UserRole, IngredientPreviousValues, Ingredient, ProductPreviousValues, IngredientAmount, OrderPreviousValues, ProductAmount, Import, ImportPreviousValues, Expense, ExpensePreviousValues, MutationType from './generated/prisma.graphql'
+
+type User {
+    id: ID!
+    username: String!
+    role: UserRole!
+}
+
+type Product {
+    id: ID!
+    price: Int!
+    name: String!
+    unit: String!
+    ingredients: [IngredientAmount!]!
+}
+
+type Order {
+  id: ID!
+  createdAt: String!
+  updatedAt: String!
+  table: Int!
+  products: [ProductAmount!]!
+  checkout: Boolean!
+  total: Int
+  user: User!
+}
+
+type Query {
+    me: User
+    users(query: UsersQueryInput): [User!]
+    ingredients(query: IngredientsQueryInput): [Ingredient!]
+    products(query: ProductsQueryInput): [Product!]
+    orders(query: OrdersQueryInput): [Order!]
+    imports(query: ImportsQueryInput): [Import!]
+    expenses(query: ExpensesQueryInput): [Expense!]
+    store: [IngredientInStock!] # Inspect store
+    dailyRevenue: [DayRevenue!]
+    monthlyRevenue: [MonthRevenue!]
+    yearlyRevenue: [YearRevenue!]
+    dailyExpense: [DayExpense!]
+    monthlyExpense: [MonthExpense!]
+    yearlyExpense: [YearExpense!]
+}
+
+input ExpensesQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: ExpenseOrderByInput
+}
+
+type Mutation {
+    login(username: String!, password: String!): User!
+    usernameTaken(username: String!): Boolean!
+    passwordValidation(password: String!): Boolean!
+    changePassword(oldPassword: String!, newPassword: String!): Boolean!
+    logout: Boolean!
+    createUser(data: CreateUserInput!): User!
+    updateUser(data: UpdateUserInput!): User!
+    deleteUser(id: ID!): User!
+    createIngredient(data: CreateIngredientInput!): Ingredient!
+    updateIngredient(id: ID!, data: UpdateIngredientInput!): Ingredient!
+    deleteIngredient(id: ID!): Ingredient!
+    createProduct(data: CreateProductInput!): Product!
+    updateProduct(id: ID!, data: UpdateProductInput!): Product!
+    deleteProduct(id: ID!): Product!
+    createOrder(data: CreateOrderInput!): Order!
+    updateOrder(id: ID!, data: UpdateOrderInput!): Order!
+    deleteOrder(id: ID!): Order!
+    createImport(data: CreateImportInput!): Import!
+    updateImport(id: ID!, data: UpdateImportInput!): Import!
+    deleteImport(id: ID!): Import!
+    createExpense(data: CreateExpenseInput!): Expense!
+    updateExpense(id: ID!, data: UpdateExpenseInput!): Expense!
+    deleteExpense(id: ID!): Expense!
+}
+
+type Subscription {
+    ingredients: IngredientSubscriptionPayload
+    products: ProductSubscriptionPayload
+    orders: OrderSubscriptionPayload
+    imports: ImportSubscriptionPayload
+    expenses: ExpenseSubscriptionPayload
+}
+
+input UsersQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: UserOrderByInput
+}
+
+input IngredientsQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: IngredientOrderByInput
+}
+
+input ImportsQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: ImportOrderByInput
+}
+
+input OrdersQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: OrderOrderByInput
+}
+
+input ProductsQueryInput {
+    skip: Int
+    first: Int
+    after: String
+    orderBy: ProductOrderByInput
+}
+
+input CreateExpenseInput {
+  begin: DateTime!
+  end: DateTime!
+  name: String!
+  total: Int!
+}
+
+input UpdateExpenseInput {
+  begin: DateTime
+  end: DateTime
+  name: String
+  total: Int
+}
+
+input CreateImportInput {
+  total: Int!
+  amount: Int!
+  ingredient: ID!
+}
+
+input UpdateImportInput {
+  total: Int
+  amount: Int
+  inStock: Int
+  ingredient: ID
+}
+
+input CreateOrderInput {
+    table: Int!
+    products: [ProductAmountInput!]!
+}
+
+input UpdateOrderInput {
+    checkout: Boolean!
+    table: Int
+    products: [ProductAmountInput!]!
+}
+
+input ProductAmountInput {
+    product: ID!
+    amount: Int!
+}
+
+input CreateProductInput {
+    name: String!
+    unit: String!
+    price: Int!
+    ingredients: [IngredientAmountInput!]!
+}
+
+input UpdateProductInput {
+    name: String
+    unit: String
+    price: Int
+    ingredients: [IngredientAmountInput!]!
+}
+
+input IngredientAmountInput {
+    ingredient: ID!
+    amount: Int!
+}
+
+input CreateIngredientInput {
+    name: String!
+    unit: String!
+}
+
+input UpdateIngredientInput {
+    name: String
+    unit: String
+}
+
+input CreateUserInput {
+    username: String!
+    role: UserRole!
+}
+
+input UpdateUserInput {
+    id: ID!
+    username: String
+    role: UserRole
+}
+
+type DayRevenue {
+    day: String!
+    total: Int!
+}
+
+type MonthRevenue {
+    month: String!
+    total: Int!
+}
+
+type YearRevenue {
+    year: String!
+    total: Int!
+}
+
+type DayExpense {
+    day: String!
+    total: Int!
+}
+
+type MonthExpense {
+    month: String!
+    total: Int!
+}
+
+type YearExpense {
+    year: String!
+    total: Int!
+}
+
+type IngredientInStock {
+    ingredient: Ingredient!
+    amount: Int!
+}
+
+type ExpenseSubscriptionPayload {
+  mutation: MutationType!
+  node: Expense
+  previousValues: ExpensePreviousValues
+}
+
+type ImportSubscriptionPayload {
+  mutation: MutationType!
+  node: Import
+  previousValues: ImportPreviousValues
+}
+
+type OrderSubscriptionPayload {
+    mutation: MutationType!
+    node: Order
+    previousValues: OrderPreviousValues
+}
+
+type IngredientSubscriptionPayload {
+    mutation: MutationType!
+    node: Ingredient
+    previousValues: IngredientPreviousValues
+}
+
+type ProductSubscriptionPayload {
+    mutation: MutationType!
+    node: Product
+    previousValues: IngredientPreviousValues
+}
