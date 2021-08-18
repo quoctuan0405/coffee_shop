@@ -1,0 +1,15 @@
+FROM node:alpine
+WORKDIR '/app'
+COPY ./package.json ./
+RUN npm install
+
+COPY ./lib ./lib
+COPY ./pages ./pages
+COPY ./src ./src
+COPY ./codegen.yml ./codegen.yml
+COPY ./.graphqlconfig ./.graphqlconfig
+COPY ./tsconfig.json ./tsconfig.json
+
+# RUN npm run generate
+RUN npm run build
+CMD ["npm", "run", "start"]
